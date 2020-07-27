@@ -1,0 +1,42 @@
+yaronlev9, kublakhan
+===============================================================================
+Yaron Levi, ID 315148239, yaron.levi@mail.huji.ac.il
+Anton Loubman, ID 321123788, anton.loubman@mail.huji.ac.il
+===============================================================================
+
+                           Project 8 - A Python File
+                           ----------------------- 
+  
+
+Submitted Files
+---------------
+README - This file.
+Main.py - The Main file that runs the program.
+Parser.py - The Parser file that translates to asm.
+
+Remarks
+-------
+*The Main file is build of 2 functions: the main function gets the vm file name
+and calls the parse function, the parse function that creates the Parser object
+reads all the lines translates them and writes them in a new asm file.
+*The Parser has a constructor in which he gets the tables of all the commands and segments,
+dictionary where the keys are the symbols and the values are the asm commands).
+
+the read method goes over all the lines in the file cuts all the whitespaces and creates
+a list of all the legitimate lines.
+
+the vm_to_asm method checks first if the line is a push/pop command or an arithmetic command, or a label/function
+command and then translates it to asm.
+
+the is_valid_line checks if the line is a valid command in vm.
+
+the write function goes over all asm lines and writes them in an asm file.
+
+
+
+
+
+
+
+
+
