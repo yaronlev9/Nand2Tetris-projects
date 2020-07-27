@@ -44,6 +44,12 @@ RAM4K.hdl - The RAM4K chip.
 RAM16K.hdl - The RAM16K chip.
 PC.hdl - The PC chip.
 
+Memory.hdl - The Memory file.
+CPU.hdl - The CPU file.
+Computer.hdl - The Computer file.
+ExtendAlu.hdl - The ExtendAlu file.
+CpuMul.hdl - The CpuMul file.
+
 Remarks
 -------
 *the Not chip uses a Nand gate that recieves the same input twice.
@@ -105,7 +111,15 @@ create the output depending on the load which is the address of the Register.
 *the PC chip uses 1 Inc16 chip 3 Mux16 for the 3 conditions and 1 Register that has
 the load value is set to true because we checked the load value in the second Mux.
 
-
+*the Memory file gets the address from the last 2 bits of the address and puts the input in the right address.
+*the CPU file gets a 16 bit instruction and using the bits it chooses how to read each instruction,
+and then wether to jump to next instruction or to move to another.
+*the computer file connects between the ROM32 that gives the instruction the cpu that reads it
+and gets what instruction to follow and the memory that holds the information the registers hold.
+*the extendAlu file follows the last 2 bits of the instruction that it receives and has more possibilities
+than the simple ALU it can make shifts of x or y it can multiply x and y and can do an ALU operation.
+*the CpuMul file does the same as the original CPU only it has shifting and multiplication functions using
+the extendedALU.
 
 
 
