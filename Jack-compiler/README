@@ -1,0 +1,44 @@
+yaronlev9, kublakhan
+===============================================================================
+Yaron Levi, ID 315148239, yaron.levi@mail.huji.ac.il
+Anton Loubman, ID 321123788, anton.loubman@mail.huji.ac.il
+===============================================================================
+
+                           Project 11 - A Python File
+                           ----------------------- 
+  
+
+Submitted Files
+---------------
+README - This file.
+JackCompiler.py - The Main file that runs the program.
+CompilationEngine.py - the engine that compiles all the token.
+JackTokenizer.py - tokenizes the commands in the file.
+Symbol.py - the symbol objects.
+SymbolTable.py - a table of all the symbols in a given subroutine.
+VMWriter.py - writes the vm file.
+
+Remarks
+-------
+the JackCompiler file has a main function that receives a file or directory and calls the analyze function that
+analyzes it.
+the JackTokenizer file has methods that remove comment lines and splits the file into tokens, and then parses it
+using the tokenize function and creaetes a list that has all the tokens and the types of the tokens.
+the CompilationEngine file iterates over the list of the tokens and the list of the token types.
+there is a function for every rule that compiles the rules based on the jack language and calls the different write
+method of the VMWriter object.
+the Symbol file represents the symbol object that has 4 attributes: name, kind, type, number.
+the SymbolTable file represents the symbols in a specific subroutine, it also has a list of the fields and static
+of the class.
+the VMWriter file has all the vm commands method, it has a write function which goes over all the indexes in the
+result list and writes it to a vm file.
+
+
+
+
+
+
+
+
+
+
