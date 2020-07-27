@@ -1,0 +1,113 @@
+yaronlev9, kublakhan
+===============================================================================
+Yaron Levi, ID 315148239, yaron.levi@mail.huji.ac.il
+Anton Loubman, ID 321123788, anton.loubman@mail.huji.ac.il
+===============================================================================
+
+                           Project 1 - An HDL File
+                           ----------------------- 
+  
+
+Submitted Files
+---------------
+README - This file.
+Not.hdl - The Not chip.
+And.hdl - The And chip.
+Or.hdl - The Or chip.
+Xor.hdl - The Xor chip.
+Mux.hdl - The Mux chip.
+DMux.hdl - The DMux chip.
+Not16.hdl - The Not16 chip.
+And16.hdl - The And16 chip.
+Or16.hdl - The Or16 chip.
+Mux16.hdl - The Mux16 chip.
+Or8Way.hdl - the Or8Way chip.
+Mux4Way16 - the Mux4Way16 chip.
+Mux8Way16 - the Mux8Way16 chip.
+DMux4Way - the DMux4Way chip.
+DMux8Way - the DMux8Way chip.
+HalfAdder.hdl - The HalfAdder chip.
+FullAdder.hdl - The FullAdder chip.
+Add16.hdl - The Add16 chip.
+Inc16.hdl - The Inc16 chip.
+ALU.hdl - The ALU chip.
+Mul.hdl - The Mul chip.
+ShiftLeft.hdl - The ShiftLeft chip.
+ShiftRight.hdl - The ShiftRight chip.
+
+Bit.hdl - The Bit chip.
+Register.hdl - The Register chip.
+RAM8.hdl - The RAM* chip.
+RAM64.hdl - The RAM64 chip.
+RAM512.hdl - The RAM512 chip.
+RAM4K.hdl - The RAM4K chip.
+RAM16K.hdl - The RAM16K chip.
+PC.hdl - The PC chip.
+
+Remarks
+-------
+*the Not chip uses a Nand gate that recieves the same input twice.
+*the And chip uses 1 Nand gate and 1 Not gate.
+*the Or chip uses 2 Not gates and 1 Nand gate.
+*the Xor chip uses 4 nand gates.
+*the Mux chip uses 1 Not gate and 3 Nand gates.
+*the DMux chip uses 1 Nand gate 1 And gate and 1 Not gate.
+*the Not16 chip uses the Not gate for every bit.
+*the And16 chip uses the And chip for every bit.
+*the Or16 chip uses the Or chip for every bit.
+*the Mux16 chip uses the Mux chip for every bit.
+*the Or8Way chip uses 7 Or chips that compares between all the 8 inputs
+and chooses 1.
+*the Mux4Way16 chip uses 3 Mux16 gates, the first 2 use the first bit of the sel
+and the last Mux16 uses the second bit of the sel.
+*the Mux8Way16 chip uses 2 Mux4Way16 for the first and second bits of the sel,
+and the last Mux16 uses the third bit of the sel.
+*the DMux4Way chip uses 3 DMux chips the first uses the second bit of the sel
+and the other 2 use the first bit of the sel (opposite of what the Mux does).
+*the DMux8Way chip uses the 2 DMux4Way and 1 DMux chips, the DMux uses the last
+bit of the sel and the 2 DMux4Way uses the first and second bits of the sel.
+
+*the HalfAdder chip uses a 4 Nand gates and 1 Not gate, because the adding operation
+acts like a Xor gate and the Xor gate consists of 4 Nand gates in addition the calculation
+of the carry acts like an And gate which consists of 1 Nand gate and 1 Not gate we decided
+that the output of the first Nand gate to go to the Not gate and the second Nand gate
+that way we managed to make the HalfAdder using 5 gates and not 6.
+*the FullAdder chip uses 2 HalfAdders which in the first gate we save the carry and the
+sum and for the second gate we sum the first sum with c and get a new sum and a new carry
+than we finish with an or that chooses between the 2 carries.
+*the Add16 chip uses 1 HalfAdder because the first bit doesn't get a carry and 15 other
+FullAdders for every bit.
+*the Inc16 uses the Add16 chip that adds an address with zeros and a 1 in the first bit.
+*the ALU chip has 5 parts: 1.checks the input of zx and nx and nullifies or negates
+2.checks the input of zy and ny and nullifies or negates
+3.according to the input of f checks if either to add or &.
+4.according to the unput of no negates the number and outputs the last bit of the result
+as ng which declares if the number is positive or negative, in addition it splits the
+output to 2 8 bits.
+5.make 2 Or8Way on each 8 bit and an or on the results and outputs zr.
+*the ShiftLeft chip uses 1 Nand gate that zeros the first bit, and uses 14 And gates
+in which the output is assigned to the next bit and 1 And bit that the output is assigned
+the last bit.
+*the ShiftRight chip uses 1 And chip that the output is assigned the last bit and another
+15 And gates in which the ame value of the n bit is assigned to the n-1 bit.
+*the Mul chip uses 14 ShiftLeft chips that create all the shifted configurations,
+and 15 Mux16 chips that checks if each configuration is nullified or not and 14 Add16
+chips that Add all the configurations.
+
+*the Bit chip has a Mux gate that outputs the in if the load is 1 else it outputs
+the data that comes out of the DFF and a DFF chip that receives what goes out
+of the Mux chip and gives an output.
+*the Register chip uses 16 Bit chips for every bit of the input.
+*the RAM8 chip uses 1 DMux8Way chip the create 8 load addresses and 1 Mux8Way16 chip
+that calls the right output according to the address given and 8 Register chips that
+create the output depending on the load which is the address of the Register.
+*the same goes for the RAM64 RAM512 RAM4K and RAM16K chips.
+*the PC chip uses 1 Inc16 chip 3 Mux16 for the 3 conditions and 1 Register that has
+the load value is set to true because we checked the load value in the second Mux.
+
+
+
+
+
+
+
