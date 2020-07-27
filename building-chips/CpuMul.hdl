@@ -1,0 +1,57 @@
+/**
+* This chip is an extension of the book CPU by using the extended ALU.
+* More specificly if instruction[15]==0 or (instruction[14] and instruction[13] equals 1)
+* the CpuMul behave exactly as the book CPU.
+* While if it is C instruction and instruction[13] == 0 the output will be D*A/M 
+* (according to instruction[12]).
+* Moreover, if it is c instruction and instruction[14] == 0 it will behave as follows:
+*
+* instruction:  | 12 | 11 | 10 |
+* _____________________________
+* shift left D  | 0  | 1  | 1  |
+* shift left A  | 0  | 1  | 0  |
+* shift left M  | 1  | 1  | 0  |
+* shift right D | 0  | 0  | 1  |
+* shift right A | 0  | 0  | 0  |
+* shift right M | 1  | 0  | 0  |
+**/
+
+CHIP CpuMul{
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset=1) or continue executing
+                         // the current program (reset=0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write into M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+     PARTS:
+	 // ExtendALU calculation
+	 Not(in = instruction[15], out = not15);
+     Mux16(a = instruction, b = aluout, sel = instruction[15] , out = mout1);
+     Or(a= instruction[5], b = not15, out = writeA);
+     ARegister(in=mout1 ,load= writeA ,out=aregout, out[0..14]=addressM);
+     And(a = instruction[15], b = instruction[12], out = AandM);
+     Mux16(a = aregout, b = inM, sel = AandM , out = mout2);
+     And(a = instruction[15], b = instruction[4], out = writeD);
+     DRegister(in=aluout, load= writeD, out=dregout);
+	 ExtendAlu(x=dregout, y=mout2, instruction=instruction[6..14], out=extendALUout, out=outM, out=aluout,
+	 zr=zr, ng=ng);
+     And(a = instruction[15], b = instruction[3], out = writeM);
+     Not(in=ng, out=pos);
+     Not(in=zr, out=notzr);
+     And(a=instruction[15], b=instruction[0], out=jgreater);
+     And(a=instruction[15], b=instruction[1], out=jequals);
+     And(a=instruction[15], b=instruction[2], out=jlower);
+     And(a=pos, b=notzr, out=posAndnotzr);
+     And(a=jgreater, b=posAndnotzr, out=jgt);
+     And(a=jequals, b=zr, out=jeq);
+     And(a=jlower, b=ng, out= jlt);
+     Or(a=jgt, b=jeq, out=temp);
+     Or(a=temp, b=jlt, out=load);
+     PC(in=aregout, load=load, inc=true, reset=reset, out[0..14]=pc);
+}
