@@ -1,0 +1,532 @@
+
+/** A class that represents game of Icy Tower */
+class IcyTowerGame{
+
+    field Array steps, sizes, locations, randNums;
+    field int steps_counter, multiplier, speed, score, randNum, prevRandNum;
+    field Player player;
+    field Step curStep, floor;
+
+    /**
+    Ctor
+    multiplier: multiplies the random number.
+    speed: the speed of the game.
+    score: the score of the player.
+    step_counter: a counter of steps.
+    randNum: random 3 digit number.
+    prevRandNum: the former 3 digit random number.
+    randNums: an array of random 1 digit numbers.
+    steps: an array of the steps.
+    sizes: an array of all the steps sizes.
+    locations: an array of all the starting locations of the steps.
+    player: the player.
+    floor: the floor step of the game.
+    curStep: the current step the player is on at the given moment.
+    */
+    constructor IcyTowerGame new(){
+        let multiplier = 9;
+        let speed = 0;
+        let score = 0;
+        let steps_counter = 10;
+        let randNum = 367;
+        let prevRandNum = 367;
+        let randNums = Array.new(2);
+        let steps = Array.new(10);
+        let sizes = Array.new(5);
+        let locations = Array.new(5);
+        let player = Player.new(247,194);
+        let floor = Step.new(10, 205,250,0);
+        let curStep = floor;
+        do createArrays();
+        do createSteps();
+        do drawBottomPellet();
+        do drawLeftWall();
+        do drawRightWall();
+        do setScore();
+        return this;
+    }
+
+    /**
+    runs the game.
+    */
+    method void run() {
+		var int key;
+		var int direction;
+		var boolean exit;
+		let exit = false;
+		while (~(exit)) {
+		    let direction = 0;
+		    let key = Keyboard.keyPressed();
+			// q key to exit
+			if (key = 81) {
+				let exit = true;
+			}
+			// up arrow - move up
+			if (key = 131) {
+				let direction = 1;
+			}
+			// left arrow - move left
+			if (key = 130) {
+				let direction = 2;
+			}
+			// right arrow - move right
+			if (key = 132) {
+				let direction = 3;
+			}
+			// while key is being pressed
+			while (~(key = 0)){
+			    if (checkEndGame() = true){
+                    return;
+                }
+                if (exit){
+                    return;
+                }
+                do eraseAll();
+                do stepsDown();
+                do removeIllegalSteps();
+                do movePlayer(direction);
+                do drawAll();
+                do Sys.wait(40);
+                let key = Keyboard.keyPressed();
+			}
+			if (checkEndGame() = true){
+                return;
+            }
+            if (exit){
+                return;
+            }
+			let direction = 0;
+			do eraseAll();
+            do stepsDown();
+            do removeIllegalSteps();
+            do movePlayer(direction);
+            do drawAll();
+            do Sys.wait(40);
+		}
+		return;
+	}
+
+    /**
+    changes the random 3 digit number.
+    */
+    method void changeRandNum(){
+        var int secondNum, thirdNum;
+        var String string1, string2, string3;
+        var char second, third;
+        if (randNum<142){ //multiplies the number so we get a 4 digit number.
+            let randNum = randNum*3;
+            let prevRandNum = prevRandNum*3;
+        }
+        let randNum = random(randNum, multiplier);
+        if (randNum = prevRandNum){
+            let multiplier = multiplier -1;
+            if (multiplier = 6){
+                let multiplier = 9;
+            }
+        }
+        let randNum = random(randNum, multiplier);
+        let prevRandNum = randNum;
+        let string1 = String.new(3);
+        let string2 = String.new(1);
+        let string3 = String.new(1);
+        do string1.setInt(randNum);
+        let second = string1.charAt(1);
+        let third = string1.charAt(2);
+        let string2 = string2.appendChar(second);
+        let string3 = string3.appendChar(third);
+        let secondNum = string2.intValue();
+        let thirdNum = string3.intValue();
+        let randNums[0] = secondNum/2; //takes the second digit of the random number.
+        let randNums[1] = thirdNum/2;  //takes the third digit of the random number.
+        do string1.dispose();
+        do string2.dispose();
+        do string3.dispose();
+        return;
+    }
+
+    /**
+    assigns the values to the given arrays.
+    */
+    method void createArrays(){
+        let locations[0] = 51;
+        let locations[1] = 131;
+        let locations[2] = 211;
+        let locations[3] = 291;
+        let locations[4] = 371;
+        let sizes[0] = 50;
+        let sizes[1] = 60;
+        let sizes[2] = 70;
+        let sizes[3] = 80;
+        let sizes[4] = 90;
+        return;
+    }
+
+    /**
+    sets the score on the screen.
+    */
+    method void setScore() {
+		do Output.moveCursor(20, 8);
+		do Output.printString("Score: ");
+		do Output.printInt(score);
+		return;
+    }
+
+    /**
+    prints the death message on the screen.
+    */
+    method void deathMsg() {
+		do Output.moveCursor(20, 30);
+		do Output.printString("You died!!!");
+		return;
+    }
+
+    /**
+    prints the you win message on the screen.
+    */
+    method void youWin() {
+		do Output.moveCursor(20, 30);
+		do Output.printString("You won!!!");
+		return;
+    }
+
+    /**
+    changes the score if reached a new step.
+    */
+    method void changeScore(){
+        if (reachedNewStep() = true){
+            let score = curStep.getNumber();
+            if (score > 10){
+                do Output.backSpace();
+            }
+            if (score > 100){
+                do Output.backSpace();
+            }
+            if (score > 1000){
+                do Output.backSpace();
+            }
+            do Output.backSpace();
+            do Output.printInt(score);
+        }
+        if ((score = 8) | (score = 7)){ //sets the speed to 1
+            let speed = 1;
+        }
+        if (score > 50){ //sets the speed to 2
+            let speed = 2;
+        }
+        if (score > 100){ //sets the speed to 3
+            let speed = 3;
+        }
+        return;
+    }
+
+    /**
+    creates all the starting steps.
+    */
+    method void createSteps(){
+        var int i, n;
+        let i = 0;
+        while (i<10){
+            let n = Math.multiply(i, 20);
+            do changeRandNum();
+            let steps[i] = Step.new(locations[randNums[0]], 185 - n, sizes[randNums[1]], i+1);
+            let i = i+1;
+        }
+        return;
+    }
+
+    /**
+    moves all the steps down.
+    */
+    method void stepsDown(){
+        var int i;
+        var Step curStep;
+        let i = 0;
+        while (i<10){
+            let curStep = steps[i];
+            do curStep.stepDown(speed);
+            let i = i+1;
+        }
+        return;
+    }
+
+    /**
+    removes the steps that are bellow the lower line and creates new steps.
+    */
+    method void removeIllegalSteps(){
+        var Array tempSteps;
+        var boolean legal;
+        var int i, y;
+        var Step lowestStep, highestStep;
+        let tempSteps = Array.new(10);
+        let i = 1;
+        let lowestStep = steps[0];
+        let highestStep = steps[9];
+        let y = highestStep.getY();
+        let legal = lowestStep.checkLegalStep(); //checks if step is bellow the line
+        if (~(legal)){
+            while (i<10){
+                let tempSteps[i-1] = steps[i];
+                let i = i+1;
+            }
+            do lowestStep.dispose();
+            let i = 0;
+            while (i<9){
+                let steps[i] = tempSteps[i];
+                let i = i+1;
+            }
+            let steps_counter = steps_counter + 1;
+            do changeRandNum();
+            let steps[9] = Step.new(locations[randNums[0]], y - 20, sizes[randNums[1]], steps_counter);
+            do tempSteps.dispose();
+            return;
+        }
+        do tempSteps.dispose();
+        return;
+    }
+
+    /**
+    checks if the player reached a step.
+    :return true if reached step and false if not:
+    */
+     method boolean reachedStep(){
+        var int i, leftLegY, leftLegX, rightLegX;
+        var Step step;
+        let leftLegY = player.getY() + 10;
+        let leftLegX = player.getX();
+        let rightLegX = player.getX() + 10;
+        if ((score < 7) & (leftLegY + 1 = floor.getY())){ //check if player touching the floor
+            let curStep = floor;
+            do player.setGravity(0);
+            do player.setJumpable(true);
+            return true;
+        }
+        let i = 0;
+        while (i<10){
+            let step = steps[i];
+            if (leftLegY + 1 = step.getY()){
+                if ((step.getX() < leftLegX) & (~((step.getX() + step.getLength()) < leftLegX))){
+                    let curStep = step;
+                    do player.setGravity(0);
+                    do player.setJumpable(true);
+                    return true;
+                }
+                if ((step.getX() < rightLegX) & (~((step.getX() + step.getLength()) < rightLegX))){
+                    let curStep = step;
+                    do player.setGravity(0);
+                    do player.setJumpable(true);
+                    return true;
+                }
+            }
+            let i=i+1;
+        }
+        return false;
+     }
+
+    /**
+    checks if player reached a new step.
+    :return true if player reached new step, false if not:
+    */
+     method boolean reachedNewStep(){
+        if (((reachedStep()) = true) & ((curStep.getNumber()) > score)){
+            return true;
+        }
+        return false;
+     }
+
+    /**
+    moves the player according to the direction given.
+    :param direction:
+    */
+    method void movePlayer(int direction){
+        if (reachedStep() = true){
+            do player.setGravity(0);
+        }
+        if (direction = 1){
+            if (((((player.getY()) - 50)>0) | (((player.getY()) - 50)=0)) & (player.getJumpable() = true)){
+                do player.setGravity(2);
+                do player.move(direction, speed);
+                return;
+            } else {
+                do player.move(0, speed);
+                return;
+                }
+        } if (direction = 2){
+            if (((player.getX()) - 30) < 51){
+                do player.move(4,speed); //moves player to left wall
+                return;
+            } else {
+                do player.move(direction, speed);
+                return;
+                }
+        } if (direction = 3){
+            if (((player.getX()) + 40) > 460){
+                do player.move(5, speed); //moves player to right wall
+                return;
+            } else {
+                do player.move(direction, speed);
+                return;
+                }
+        } if (direction = 0) {
+            do player.move(direction, speed);
+        } if (reachedStep() = false){
+            do player.setGravity(2);
+            do player.setJumpable(false);
+            return;
+        }
+        return;
+    }
+
+    /**
+    check if game is ended according to rules.
+    :return true if game ended, false if not:
+    */
+    method boolean checkEndGame(){
+        if (((player.getY() + 10) >203) & (score > 6)){
+            do deathMsg(); //print death message
+            return true;
+        }
+        if (score > 200) {
+            do youWin(); // print winning message
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+    disposes all the objects of the game.
+    */
+    method void dispose(){
+        var int i;
+        var Step step;
+        let i = 0;
+        do player.dispose();
+        while (i<10){
+            let step = steps[i];
+            do step.dispose();
+            let i = i+1;
+        }
+        do randNums.dispose();
+        do locations.dispose();
+        do sizes.dispose();
+        do curStep.dispose();
+        do Memory.deAlloc(steps);
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /**
+    draws all the things needed for the screen.
+    */
+    method void drawAll(){
+        var int i;
+        var Step step;
+        let i = 0;
+        do player.draw();
+        while (i<10){
+            let step = steps[i];
+            do step.drawOrErase(true);
+            let i = i+1;
+        }
+        do changeScore();
+        return;
+    }
+
+    /**
+    erases all the things that are on the screen besides the wall and the lower line.
+    */
+    method void eraseAll(){
+        var int i;
+        var Step step;
+        let i = 0;
+        do player.erase();
+        while (i<10){
+            let step = steps[i];
+            do step.drawOrErase(false);
+            let i = i+1;
+        }
+        return;
+    }
+
+    /**
+    draws the bottom pellet.
+    */
+    method void drawBottomPellet(){
+        do Screen.setColor(true);
+        do Screen.drawLine(51, 205, 461, 205);
+        return;
+    }
+
+    /**
+    draws the left wall.
+    */
+    method void drawLeftWall(){
+        do Screen.setColor(true);
+        do Screen.drawRectangle(0, 0, 50, 255);
+        return;
+
+    }
+
+    /**
+    draws the rightt wall.
+    */
+    method void drawRightWall(){
+        do Screen.setColor(true);
+        do Screen.drawRectangle(462, 0, 511, 255);
+        return;
+    }
+
+    /**
+    the random generator.
+    :param randNumber:
+    :param multiplier:
+    :return number:
+    */
+    method int random(int randNumber, int multiplier){
+        var int multiplied, last,first, number;
+        var String string1, string2, string3, string4, string5;
+        var char lastNum, leftMidNum, rightMidNum, firstNum;
+        let multiplied = randNumber*multiplier;
+        //create the strings
+        let string1 = String.new(4);
+        let string2 = String.new(1);
+        let string3 = String.new(1);
+        let string4 = String.new(3);
+        let string5 = String.new(1);
+        do string1.setInt(multiplied);
+        let lastNum = string1.charAt(3);
+        let rightMidNum = string1.charAt(2);
+        let leftMidNum = string1.charAt(1);
+        let firstNum = string1.charAt(0);
+        let string2 = string2.appendChar(firstNum);
+        let string3 = string3.appendChar(lastNum);
+        let first = string2.intValue();
+        let last  = string3.intValue();
+        let first = first + last;
+        if (first>9){ //if added number are 2 digits
+            let first = 2;
+        }
+        do string5.setInt(first);
+        let firstNum = string5.charAt(0);
+        //appends all the chars that consist the new 3 digit number to a string
+        let string4 = string4.appendChar(firstNum);
+        let string4 = string4.appendChar(leftMidNum);
+        let string4 = string4.appendChar(rightMidNum);
+        let number = string4.intValue(); //turns it to int
+        //dispose the strings
+        do string1.dispose();
+        do string2.dispose();
+        do string3.dispose();
+        do string4.dispose();
+        do string5.dispose();
+        return number;
+    }
+}
+
+
+
+
+
+
+
+
