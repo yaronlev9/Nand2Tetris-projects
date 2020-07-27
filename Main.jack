@@ -1,0 +1,14 @@
+
+/** the main class */
+class Main {
+    /**
+    the main function that runs the game.
+    */
+    function void main() {
+        var IcyTowerGame game;
+        let game = IcyTowerGame.new();
+        do game.run();
+        do game.dispose();
+        return;
+    }
+}
