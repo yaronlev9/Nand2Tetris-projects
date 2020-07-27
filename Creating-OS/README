@@ -1,0 +1,44 @@
+yaronlev9, kublakhan
+===============================================================================
+Yaron Levi, ID 315148239, yaron.levi@mail.huji.ac.il
+Anton Loubman, ID 321123788, anton.loubman@mail.huji.ac.il
+===============================================================================
+
+                           Project 12 - A Python File
+                           ----------------------- 
+  
+
+Submitted Files
+---------------
+README - This file.
+Array.py - The class of the array.
+Keyboard.py - The class of the keyboard.
+Math.py - The class of the math.
+Memory.py - The class of the memory.
+Output.py - The class of the output.
+Screen.py - The class of the screen.
+String.py - The class of the string.
+Sys.py - The class of the sys.
+
+Remarks
+-------
+the Array class has 2 method 1 for creating space for the array and 2 for disposing the array.
+the Keyboard class has methods that read from the keyboard and write lines from the keyboard.
+the Math class has different functions and calculations like division and multiplication.
+the Memory class has method that can excess specific memory and allocate space for object and deallocate
+objects that are no longer necessary.
+the Output class can print out to the user messages.
+the Screen class has methods that can draw lines, rectangles circles.
+the String class has methods that can modify strings, deleting parts of it, adding to string and replacing parts
+in a string.
+the Sys class can halt the program, freeze for a given time and printing errors.
+
+
+
+
+
+
+
+
+
+
