@@ -1,0 +1,41 @@
+yaronlev9, kublakhan
+===============================================================================
+Yaron Levi, ID 315148239, yaron.levi@mail.huji.ac.il
+Anton Loubman, ID 321123788, anton.loubman@mail.huji.ac.il
+===============================================================================
+
+                           Project 4 - An ASM File
+                           ----------------------- 
+  
+
+Submitted Files
+---------------
+README - This file.
+Fill.asm - The Fill file.
+Mult.asm - The Mult file.
+Divide.asm - The Divide file.
+Sort.asm - The Sort file.
+
+
+Remarks
+-------
+*the Fill file checks if the keyboard is pressed if yes it blackens every pixel of the screen if ont it makes them
+white.
+*the Mult file gets 2 numbers and multiplies the result using a loop that runs the number of times of the second number
+and sums every time the first number. if the second number is negative it deletes from the sum instead of addition.
+*the Sort file  uses a bubble sort algorithm to sort from higher to lower in O(n^2).
+*the Divide file does a O(logn) using shifting that divides the number by 2 each time and counts
+the number of time it was divided until we get to a number that is the max without being higher than the original
+number, then deletes it from him, and then goes again with the rest of the number until 0 is reached.
+
+
+
+
+
+
+
+
+
+
+
+
