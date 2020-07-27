@@ -1,0 +1,45 @@
+yaronlev9, kublakhan
+===============================================================================
+Yaron Levi, ID 315148239, yaron.levi@mail.huji.ac.il
+Anton Loubman, ID 321123788, anton.loubman@mail.huji.ac.il
+===============================================================================
+
+                           Project 6 - A Python File
+                           ----------------------- 
+  
+
+Submitted Files
+---------------
+README - This file.
+Main.py - The Main file that runs the program.
+Parser.py - The Parser file that translates to ones and zero.
+
+Remarks
+-------
+*The Main file is build of 2 functions: the main function gets the assembly file name
+and calls the parse function, the parse function that creates the Parser object
+reads all the lines translates them and writes them in a new hack file.
+*The Parser has a constructor in which he gets the tables of all the labels and symbols,
+the tables of the registers the jumps and the commands (dictionary where the keys are the
+symbols and the values are the byte code value).
+
+the read method goes over all the lines in the file cuts all the whitespaces and creates
+a list of all the legitimate lines.
+
+the asm_to_binary_line method checks first if the line is a A instruction or a C instruction,
+an adds the bytes according to the tables.
+
+the label_parse function goes over all the labels and adds them to the symbols table
+with the value of the line they were created in. if the line refers to a variable
+it gives it the value from 16.
+
+the write function goes over all the byte code lines and writes them in a hack file.
+
+
+
+
+
+
+
+
+
